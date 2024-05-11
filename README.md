@@ -14,7 +14,7 @@ Copy the content in the .env.example file and paste it in your .env file
 
 Clone the repository
 
-    git clone https://github.com/sarahishamsaied/tasks-backend
+    git clone https://github.com/sarahishamsaied/tasks-backend.git
     cd tasks-backend
     npm i
 
