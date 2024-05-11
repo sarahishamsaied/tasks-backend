@@ -3,6 +3,18 @@ import bcrypt from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { CustomError } from '../Errors/CustomError';
 
+const UserResponseDTO = {
+  id: true,
+  email: true,
+  firstName: true,
+  lastName: true,
+  dateOfBirth: true,
+  isVerified: true,
+  createdAt: true,
+  deletedAt: true,
+  isDeleted: true,
+};
+
 class UserRepository {
   private prisma: PrismaClient;
 
@@ -43,17 +55,7 @@ class UserRepository {
   async findById(id: string): Promise<Omit<User, 'password'> | null> {
     const user = this.prisma.user.findUnique({
       where: { id },
-      select: {
-        id: true,
-        email: true,
-        firstName: true,
-        lastName: true,
-        dateOfBirth: true,
-        isVerified: true,
-        createdAt: true,
-        deletedAt: true,
-        isDeleted: true,
-      },
+      select: UserResponseDTO,
     });
     if (!user) {
       throw new CustomError('User not found', 404);
@@ -64,17 +66,7 @@ class UserRepository {
   async findByEmail(email: string): Promise<Omit<User, 'password'> | null> {
     const user = this.prisma.user.findFirst({
       where: { email },
-      select: {
-        id: true,
-        email: true,
-        firstName: true,
-        lastName: true,
-        dateOfBirth: true,
-        isVerified: true,
-        createdAt: true,
-        deletedAt: true,
-        isDeleted: true,
-      },
+      select: UserResponseDTO,
     });
     if (!user) {
       throw new CustomError('User not found', 404);
@@ -90,16 +82,28 @@ class UserRepository {
     return foundUser;
   }
 
-  async delete(id: string): Promise<User> {
-    const user = this.prisma.user.update({ where: { id }, data: { deletedAt: new Date(), isDeleted: true } });
+  async delete(id: string): Promise<Omit<User, 'password'>> {
+    const user = await this.prisma.user.update({
+      where: { id },
+      data: { deletedAt: new Date(), isDeleted: true },
+      select: UserResponseDTO,
+    });
+
     if (!user) {
       throw new CustomError('User not found', 404);
     }
     return user;
   }
 
-  async reactivate(id: string): Promise<User> {
-    const user = this.prisma.user.update({ where: { id }, data: { deletedAt: null, isDeleted: false } });
+  async reactivate(id: string): Promise<Omit<User, 'password'>> {
+    const user = await this.prisma.user.update({
+      where: { id },
+      data: { deletedAt: null, isDeleted: false },
+      select: UserResponseDTO,
+    });
+    if (!user.isDeleted) {
+      throw new CustomError('User account is already active', 400);
+    }
     if (!user) {
       throw new CustomError('User not found', 404);
     }

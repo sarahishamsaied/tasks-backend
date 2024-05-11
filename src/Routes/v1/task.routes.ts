@@ -6,6 +6,7 @@ const router = Router();
 
 router.post('/', asyncWrapper(create));
 router.get('/user', asyncWrapper(get));
+router.get('/:id', asyncWrapper(findById));
 router.put('/:id', asyncWrapper(update));
 router.patch('/:id', asyncWrapper(remove));
 router.patch('/:id/status', asyncWrapper(updateStatus));

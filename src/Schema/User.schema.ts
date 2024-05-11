@@ -1,4 +1,3 @@
-import { User } from '@prisma/client';
 import Joi from 'joi';
 
 export const userSignUpSchema = Joi.object({

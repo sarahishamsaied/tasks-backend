@@ -8,6 +8,7 @@ import { CustomError } from './Errors/CustomError';
 import swaggerUI from 'swagger-ui-express';
 import { swaggerSpec } from '../swaggerDoc';
 import swagger from '../swagger.json';
+import cronJobs from './Jobs/cronCoordinator';
 dotenv.config();
 
 const app = express();
@@ -30,4 +31,5 @@ const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  cronJobs();
 });

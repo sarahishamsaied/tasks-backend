@@ -12,6 +12,20 @@ const swaggerOptions = {
     basePath: '/api/v1',
   },
   apis: ['./swagger.json'],
+  components: {
+    securitySchemes: {
+      BearerAuth: {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+    },
+  },
+  security: [
+    {
+      BearerAuth: [],
+    },
+  ],
 };
 
 export const swaggerSpec = swaggerJSDoc(swaggerOptions);

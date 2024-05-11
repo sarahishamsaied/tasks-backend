@@ -30,6 +30,22 @@ class TaskRepository {
   async delete(id: string): Promise<Task> {
     return this.prisma.task.update({ where: { id }, data: { deletedAt: new Date(), isDeleted: true } });
   }
+
+  async changeTaskStatus(): Promise<string> {
+    console.log('Updating task status');
+    const currentTime = new Date();
+    const tasksToUpdate = await this.prisma.task.findMany({
+      where: {
+        AND: [{ startDate: { lte: currentTime } }, { endDate: { gte: currentTime } }],
+      },
+    });
+    tasksToUpdate.forEach(async (task) => {
+      console.log('Updating task status to IN_PROGRESS');
+      await this.prisma.task.update({ where: { id: task.id }, data: { status: EnumStatus.IN_PROGRESS } });
+    });
+    console.log('Task status updated');
+    return 'Task status updated';
+  }
 }
 
 export default TaskRepository;

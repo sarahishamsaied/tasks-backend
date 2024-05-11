@@ -3,12 +3,11 @@
   "info": {
     "version": "1.0.0",
     "title": "Task Service API",
-    "description": "API documentation for the Task backend service"
+    "description": "API documentation for the Task backend service. When testing the API please ignore the brackets in the url paths. They are only there to show the different endpoints for the same path."
   },
-  "basePath": "/api/v1",
-  "host": "localhost:3000",
+  "host": "localhost:3000/api/v1",
   "paths": {
-    "/task(create)": {
+    "/api/v1/task(create)": {
       "post": {
         "summary": "Creates a new task",
         "tags": ["Task"],
@@ -49,7 +48,7 @@
         }
       }
     },
-    "/task(update)": {
+    "/api/v1/task(update)": {
       "put": {
         "summary": "Updates a task",
         "tags": ["Task"],
@@ -122,8 +121,134 @@
         }
       }
     },
+    "/api/v1/task/{id}(delete)": {
+      "patch": {
+        "summary": "Deletes a task",
+        "tags": ["Task"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Task ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Task Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/v1/task/status/{id}": {
+      "patch": {
+        "summary": "Updates the status of a task",
+        "tags": ["Task"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Task ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "status",
+            "in": "body",
+            "description": "Task status",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": ["PENDING", "IN_PROGRESS", "COMPLETED"]
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "schema": {
+                  "$ref": "#/definitions/TaskResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Task Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/v1/task/{id}": {
+      "get": {
+        "summary": "Gets a task by ID",
+        "tags": ["Task"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Task ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "schema": {
+                  "$ref": "#/definitions/TaskResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Task Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
 
-    "/user/auth/register": {
+    "/api/v1/user/auth/register": {
       "post": {
         "summary": "Registers a new user",
         "tags": ["User"],
@@ -164,7 +289,7 @@
         }
       }
     },
-    "/user/auth/login": {
+    "/api/v1/user/auth/login": {
       "post": {
         "summary": "Logs in a user",
         "tags": ["User"],
@@ -208,8 +333,92 @@
           }
         }
       }
+    },
+    "/api/v1/user/auth/deactivate/{id}": {
+      "patch": {
+        "summary": "Deactivates a user account",
+        "tags": ["User"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "User Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/v1/user/auth/reactivate/{id}": {
+      "patch": {
+        "summary": "Reactivates a user account",
+        "tags": ["User"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "User Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
     }
   },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+
   "definitions": {
     "Task": {
       "type": "object",
