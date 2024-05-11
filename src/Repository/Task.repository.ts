@@ -8,27 +8,34 @@ class TaskRepository {
   }
 
   async get(userId: string): Promise<Task[]> {
-    return this.prisma.task.findMany({ where: { userId, isDeleted: false } });
+    const tasks = await this.prisma.task.findMany({ where: { userId, isDeleted: false } });
+    return tasks;
   }
 
   async create(task: Omit<Task, 'id' | 'createdAt' | 'isDeleted' | 'deletedAt'>): Promise<Task> {
-    return this.prisma.task.create({ data: task });
+    console.log('Creating task');
+    const created = await this.prisma.task.create({ data: task });
+    return created;
   }
 
   async findById(id: string): Promise<Task | null> {
-    return this.prisma.task.findUnique({ where: { id } });
+    const task = await this.prisma.task.findUnique({ where: { id } });
+    return task;
   }
 
   async update(id: string, task: Partial<Task>): Promise<Task> {
-    return this.prisma.task.update({ where: { id }, data: task });
+    const updatedTask = await this.prisma.task.update({ where: { id }, data: task });
+    return updatedTask;
   }
 
   async updateStatus(id: string, status: EnumStatus): Promise<Task> {
-    return this.prisma.task.update({ where: { id }, data: { status } });
+    const task = await this.prisma.task.update({ where: { id }, data: { status } });
+    return task;
   }
 
   async delete(id: string): Promise<Task> {
-    return this.prisma.task.update({ where: { id }, data: { deletedAt: new Date(), isDeleted: true } });
+    const task = await this.prisma.task.update({ where: { id }, data: { deletedAt: new Date(), isDeleted: true } });
+    return task;
   }
 
   async changeTaskStatus(): Promise<string> {
